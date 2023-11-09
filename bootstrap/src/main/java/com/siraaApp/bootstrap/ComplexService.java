@@ -7,6 +7,8 @@ import elemental.json.JsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject; // you were missing this import probably
 
 @org.springframework.stereotype.Service
 public class ComplexService {
@@ -16,14 +18,21 @@ public class ComplexService {
 
     Response response;
 
-    public JsonObject getData() throws IOException {
+    public JSONObject getData() throws IOException {
         Request request = new Request.Builder()
                 .url(posturl)
                 .build();
 
         response = client.newCall(request).execute();
 
-        return new JsonObject(response.body().string());
+        try{
+            return new JSONObject(response.body().toString());
+        }catch (JSONException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+
         // try {
         // return new JsonAdapter.fromJson(response.body().source());
         // } catch (JsonException e) {
